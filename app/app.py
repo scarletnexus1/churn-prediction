@@ -51,7 +51,10 @@ input_data = {
 if st.button("🚀 Predict Churn"):
 
     # Create dataframe
-    input_df = pd.DataFrame([{
+    expected_cols = model.named_steps['preprocessing'].feature_names_in_
+
+    # Create base input
+    data = {
         'gender': 'Male',
         'SeniorCitizen': 0,
         'Partner': 'No',
@@ -71,14 +74,13 @@ if st.button("🚀 Predict Churn"):
         'PaymentMethod': payment,
         'MonthlyCharges': float(monthly),
         'TotalCharges': float(total)
-    }])
+    }
 
-    # IMPORTANT: ensure correct dtypes EXACTLY
-    input_df = input_df.astype({
-        'tenure': 'int64',
-        'MonthlyCharges': 'float64',
-        'TotalCharges': 'float64'
-    })
+    # Create DataFrame
+    input_df = pd.DataFrame([data])
+
+    # 🔥 CRITICAL: reorder columns EXACTLY like training
+    input_df = input_df[expected_cols]
 
     # STEP 3: Fix categorical types
     cat_cols = [
@@ -92,6 +94,12 @@ if st.button("🚀 Predict Churn"):
         input_df[col] = input_df[col].astype(str)
 
     input_df = input_df.reset_index(drop=True)
+
+    st.write("INPUT COLUMNS:", input_df.columns.tolist())
+    st.write("INPUT DTYPES:", input_df.dtypes)
+
+    pre = model.named_steps['preprocessing']
+    st.write("EXPECTED COLUMNS:", list(pre.feature_names_in_))
     # STEP 4: Predict
     prediction = model.predict(input_df)[0]
     prob = model.predict_proba(input_df)[0][1]
