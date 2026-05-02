@@ -7,6 +7,7 @@ import os
 
 # Fix import path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 sys.path.append(os.path.join(BASE_DIR, "..", "model"))
 from pipeline import FeatureEngineer
 model_path = os.path.join(BASE_DIR, "..", "model", "pipeline_model.pkl")
@@ -50,26 +51,45 @@ input_data = {
 if st.button("🚀 Predict Churn"):
 
     # Create dataframe
-    input_df = pd.DataFrame([input_data])
+    input_df = pd.DataFrame([{
+        'gender': 'Male',
+        'SeniorCitizen': 0,
+        'Partner': 'No',
+        'Dependents': 'No',
+        'tenure': tenure,
+        'PhoneService': 'Yes',
+        'MultipleLines': 'No',
+        'InternetService': 'DSL',
+        'OnlineSecurity': 'No',
+        'OnlineBackup': 'No',
+        'DeviceProtection': 'No',
+        'TechSupport': 'No',
+        'StreamingTV': 'No',
+        'StreamingMovies': 'No',
+        'Contract': contract,
+        'PaperlessBilling': 'Yes',
+        'PaymentMethod': payment,
+        'MonthlyCharges': monthly,
+        'TotalCharges': total
+    }])
 
-    # Add missing features (VERY IMPORTANT)
-    input_df['gender'] = 'Male'
-    input_df['SeniorCitizen'] = 0
-    input_df['Partner'] = 'No'
-    input_df['Dependents'] = 'No'
-    input_df['PaperlessBilling'] = 'Yes'
+    # STEP 2: Fix numeric types
+    input_df['tenure'] = input_df['tenure'].astype(int)
+    input_df['MonthlyCharges'] = input_df['MonthlyCharges'].astype(float)
+    input_df['TotalCharges'] = input_df['TotalCharges'].astype(float)
 
-    input_df['PhoneService'] = 'Yes'
-    input_df['MultipleLines'] = 'No'
-    input_df['InternetService'] = 'DSL'
-    input_df['OnlineSecurity'] = 'No'
-    input_df['OnlineBackup'] = 'No'
-    input_df['DeviceProtection'] = 'No'
-    input_df['TechSupport'] = 'No'
-    input_df['StreamingTV'] = 'No'
-    input_df['StreamingMovies'] = 'No'
+    # STEP 3: Fix categorical types
+    cat_cols = [
+        'gender', 'Partner', 'Dependents', 'PhoneService', 'MultipleLines',
+        'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection',
+        'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract',
+        'PaperlessBilling', 'PaymentMethod'
+    ]
 
-    # Predict directly (NO API)
+    for col in cat_cols:
+        input_df[col] = input_df[col].astype(str)
+
+    # STEP 4: Predict
     prediction = model.predict(input_df)[0]
     prob = model.predict_proba(input_df)[0][1]
 
