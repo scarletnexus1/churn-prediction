@@ -6,11 +6,9 @@ import sys
 import os
 
 # Fix import path
-sys.path.append(os.path.abspath("../model"))
-
-# Load model
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
+sys.path.append(os.path.join(BASE_DIR, "..", "model"))
+from pipeline import FeatureEngineer
 model_path = os.path.join(BASE_DIR, "..", "model", "pipeline_model.pkl")
 
 model = joblib.load(model_path)
