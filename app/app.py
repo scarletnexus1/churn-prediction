@@ -9,7 +9,11 @@ import os
 sys.path.append(os.path.abspath("../model"))
 
 # Load model
-model = joblib.load("../model/pipeline_model.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model_path = os.path.join(BASE_DIR, "..", "model", "pipeline_model.pkl")
+
+model = joblib.load(model_path)
 
 st.set_page_config(page_title="Churn Predictor", layout="wide")
 
