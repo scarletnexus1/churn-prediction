@@ -51,10 +51,11 @@ input_data = {
 if st.button("🚀 Predict Churn"):
 
     # Create dataframe
-    expected_cols = model.named_steps['preprocessing'].feature_names_in_
+    # Get expected columns from trained pipeline
+    expected_cols = list(model.named_steps['preprocessing'].feature_names_in_)
 
-    # Create base input
-    data = {
+    # Build a base input with what you know
+    base_data = {
         'gender': 'Male',
         'SeniorCitizen': 0,
         'Partner': 'No',
@@ -76,31 +77,31 @@ if st.button("🚀 Predict Churn"):
         'TotalCharges': float(total)
     }
 
-    # Create DataFrame
-    input_df = pd.DataFrame([data])
+    # 🔥 Step 1: Create full dataframe with ALL expected columns
+    input_df = pd.DataFrame(columns=expected_cols)
 
-    # 🔥 CRITICAL: reorder columns EXACTLY like training
-    input_df = input_df[expected_cols]
+    # 🔥 Step 2: Fill known values
+    for col in base_data:
+        if col in input_df.columns:
+            input_df.loc[0, col] = base_data[col]
 
-    # STEP 3: Fix categorical types
-    cat_cols = [
-        'gender', 'Partner', 'Dependents', 'PhoneService', 'MultipleLines',
-        'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection',
-        'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract',
-        'PaperlessBilling', 'PaymentMethod'
-    ]
+    # 🔥 Step 3: Fill missing safely
+    for col in input_df.columns:
+        if input_df[col].isnull().all():
+            input_df.loc[0, col] = 'No' if input_df[col].dtype == 'object' else 0
 
-    for col in cat_cols:
-        input_df[col] = input_df[col].astype(str)
+    # 🔥 Step 4: Fix numeric types
+    input_df['tenure'] = input_df['tenure'].astype(int)
+    input_df['MonthlyCharges'] = input_df['MonthlyCharges'].astype(float)
+    input_df['TotalCharges'] = input_df['TotalCharges'].astype(float)
 
+    # 🔥 Step 5: Ensure clean index
     input_df = input_df.reset_index(drop=True)
 
-    st.write("INPUT COLUMNS:", input_df.columns.tolist())
-    st.write("INPUT DTYPES:", input_df.dtypes)
+    # Debug (you can remove later)
+    st.write("INPUT:", input_df)
 
-    pre = model.named_steps['preprocessing']
-    st.write("EXPECTED COLUMNS:", list(pre.feature_names_in_))
-    # STEP 4: Predict
+    # Predict
     prediction = model.predict(input_df)[0]
     prob = model.predict_proba(input_df)[0][1]
 
