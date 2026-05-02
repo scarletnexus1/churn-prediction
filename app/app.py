@@ -56,7 +56,7 @@ if st.button("🚀 Predict Churn"):
         'SeniorCitizen': 0,
         'Partner': 'No',
         'Dependents': 'No',
-        'tenure': tenure,
+        'tenure': int(tenure),
         'PhoneService': 'Yes',
         'MultipleLines': 'No',
         'InternetService': 'DSL',
@@ -69,14 +69,16 @@ if st.button("🚀 Predict Churn"):
         'Contract': contract,
         'PaperlessBilling': 'Yes',
         'PaymentMethod': payment,
-        'MonthlyCharges': monthly,
-        'TotalCharges': total
+        'MonthlyCharges': float(monthly),
+        'TotalCharges': float(total)
     }])
 
-    # STEP 2: Fix numeric types
-    input_df['tenure'] = input_df['tenure'].astype(int)
-    input_df['MonthlyCharges'] = input_df['MonthlyCharges'].astype(float)
-    input_df['TotalCharges'] = input_df['TotalCharges'].astype(float)
+    # IMPORTANT: ensure correct dtypes EXACTLY
+    input_df = input_df.astype({
+        'tenure': 'int64',
+        'MonthlyCharges': 'float64',
+        'TotalCharges': 'float64'
+    })
 
     # STEP 3: Fix categorical types
     cat_cols = [
@@ -89,6 +91,7 @@ if st.button("🚀 Predict Churn"):
     for col in cat_cols:
         input_df[col] = input_df[col].astype(str)
 
+    input_df = input_df.reset_index(drop=True)
     # STEP 4: Predict
     prediction = model.predict(input_df)[0]
     prob = model.predict_proba(input_df)[0][1]
