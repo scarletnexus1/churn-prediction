@@ -7,12 +7,20 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import accuracy_score, roc_auc_score, classification_report
 import numpy as np
-from pipeline import FeatureEngineer
 
+import sys
+import os
+
+
+# Add app folder to path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+APP_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "app"))
+sys.path.insert(0, APP_DIR)
+
+from pipeline import FeatureEngineer
 # Load data
 df = pd.read_csv("../data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
