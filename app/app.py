@@ -4,16 +4,26 @@ import joblib
 import shap
 import os
 import sys
+import pickle
 
 # Fix paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
-sys.path.insert(0, ROOT_DIR)  # ← must be BEFORE joblib.load()
+sys.path.insert(0, ROOT_DIR)
 
-from pipeline import FeatureEngineer  # ← force import so pickle can find it
+from pipeline import FeatureEngineer
+
+# Custom unpickler to force correct module resolution
+class CustomUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if name == 'FeatureEngineer':
+            return FeatureEngineer
+        return super().find_class(module, name)
 
 model_path = os.path.join(BASE_DIR, "..", "model", "pipeline_model.pkl")
-model = joblib.load(model_path)  # ← now it can find pipeline.FeatureEngineer
+
+with open(model_path, 'rb') as f:
+    model = CustomUnpickler(f).load()
 
 st.set_page_config(page_title="Churn Predictor", layout="wide")
 
