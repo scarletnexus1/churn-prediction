@@ -2,14 +2,20 @@ import streamlit as st
 import pandas as pd
 import joblib
 import shap
-import sys
 import os
+import sys
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
+sys.path.insert(0, ROOT_DIR)
+
+from app.pipeline import FeatureEngineer
 
 # Fix import path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-sys.path.append(os.path.join(BASE_DIR, "..", "model"))
-from pipeline import FeatureEngineer
+
 model_path = os.path.join(BASE_DIR, "..", "model", "pipeline_model.pkl")
 
 model = joblib.load(model_path)

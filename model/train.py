@@ -13,16 +13,15 @@ import numpy as np
 import sys
 import os
 
-
-
 # Add project root to path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
 sys.path.insert(0, ROOT_DIR)
 
-from pipeline import FeatureEngineer
+from pipeline import FeatureEngineer  # ← importing from ROOT now
+
 # Load data
-df = pd.read_csv("../data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
+df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
 # Cleaning
 df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
@@ -37,10 +36,6 @@ df['Churn'] = df['Churn'].map({'Yes':1, 'No':0})
 # Split
 X = df.drop('Churn', axis=1)
 y = df['Churn']
-
-
-
-
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
@@ -97,16 +92,16 @@ acc = accuracy_score(y_test, y_pred)
 roc = roc_auc_score(y_test, y_prob)
 
 print("\n Model Performance")
-
 print(f"Accuracy     : {acc:.4f}")
 print(f"ROC-AUC      : {roc:.4f}")
 print(f"Precision    : {precision_score(y_test, y_pred):.4f}")
-print(f"Recall       : {recall_score(y_test, y_pred):.4f}")  # 🔥 IMPORTANT
+print(f"Recall       : {recall_score(y_test, y_pred):.4f}")
 print(f"F1 Score     : {f1_score(y_test, y_pred):.4f}")
 
 print("\n📋 Classification Report:")
 print(classification_report(y_test, y_pred))
-# Save
-joblib.dump(model_pipeline, "pipeline_model.pkl")
+
+# Save to model folder
+joblib.dump(model_pipeline, "model/pipeline_model.pkl")# ← saves to correct folder
 
 print("✅ Model saved successfully!")
