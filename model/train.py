@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
 sys.path.insert(0, ROOT_DIR)
 
-from app.pipeline import FeatureEngineer
+from pipeline import FeatureEngineer
 # Load data
 df = pd.read_csv("../data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
