@@ -8,6 +8,8 @@ An end-to-end **Machine Learning project** that predicts customer churn and prov
 
 This project builds a churn prediction system using **Scikit-learn pipelines** and deploys it using **Streamlit Cloud**.
 
+The model uses **XGBoost with class imbalance handling** to improve churn detection, especially for high-risk customers.
+
 The application allows users to:
 
 * 🔍 Predict whether a customer will churn
@@ -57,9 +59,27 @@ Customer churn is a major issue in the telecom industry.
 
 **Interpretation:**
 
-* Strong overall performance
-* Balanced precision-recall tradeoff
-* Effectively identifies churn-prone customers
+* Model prioritizes **high recall (0.77)** to capture most churn-prone customers  
+* Slight trade-off in accuracy is acceptable for business use  
+* Better suited for **customer retention strategies**
+
+## 🔍 Model Explainability (SHAP)
+
+To make predictions interpretable, SHAP (SHapley Additive exPlanations) is used to identify the key factors influencing each prediction.
+
+### What it shows:
+
+- Contribution of each feature to churn prediction  
+- Top drivers behind customer risk  
+- Positive and negative impact of features  
+
+### Example Insights:
+
+- High MonthlyCharges → increases churn risk  
+- Low tenure → strong indicator of churn  
+- Lack of TechSupport → increases probability of churn  
+
+This helps transform the model from a **black box** into an **explainable system**, enabling better business decisions.
 
 ---
 
@@ -91,8 +111,9 @@ https://churn-prediction-scarlet.streamlit.app/
 * 🎯 Real-time churn prediction
 * 📉 Risk scoring system
 * 📊 Customer insights (CLV, pricing sensitivity)
-* 🔍 Explainable AI (feature importance)
+* 🔍 Explainable AI using SHAP (feature-level insights)
 * 💡 Smart recommendations
+* ⚡ Optimized model with high churn recall (77%)
 
 ---
 
@@ -141,7 +162,6 @@ The biggest challenge in ML projects is not model building, but:
 ## 👨‍💻 Author
 
 **Nimit Arora**
-Machine Learning Enthusiast
 
 ---
 

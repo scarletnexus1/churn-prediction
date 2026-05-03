@@ -1,14 +1,16 @@
 import pandas as pd
 import joblib
-
+from xgboost import XGBClassifier
+from sklearn.utils.class_weight import compute_class_weight
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import accuracy_score, roc_auc_score, classification_report
-
+import numpy as np
 from pipeline import FeatureEngineer
 
 # Load data
@@ -28,7 +30,16 @@ df['Churn'] = df['Churn'].map({'Yes':1, 'No':0})
 X = df.drop('Churn', axis=1)
 y = df['Churn']
 
+
+
+
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+classes = np.unique(y_train)
+weights = compute_class_weight(class_weight='balanced', classes=classes, y=y_train)
+class_weights = dict(zip(classes, weights))
+scale_pos_weight = class_weights[1] / class_weights[0]
 
 # Column types
 num_cols = X.select_dtypes(include=['int64','float64']).columns
@@ -54,7 +65,16 @@ preprocessor = ColumnTransformer([
 model_pipeline = Pipeline([
     ('feature_engineering', FeatureEngineer()),
     ('preprocessing', preprocessor),
-    ('model', LogisticRegression(max_iter=1000))
+    ('model', XGBClassifier(
+        n_estimators=300,
+        learning_rate=0.05,
+        max_depth=5,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        scale_pos_weight=scale_pos_weight,
+        random_state=42,
+        eval_metric='logloss'
+    ))
 ])
 
 # Train
@@ -68,12 +88,16 @@ y_prob = model_pipeline.predict_proba(X_test)[:, 1]
 acc = accuracy_score(y_test, y_pred)
 roc = roc_auc_score(y_test, y_prob)
 
-print(f"Accuracy: {acc:.4f}")
-print(f"ROC-AUC: {roc:.4f}")
+print("\n Model Performance")
 
-print("\nClassification Report:")
+print(f"Accuracy     : {acc:.4f}")
+print(f"ROC-AUC      : {roc:.4f}")
+print(f"Precision    : {precision_score(y_test, y_pred):.4f}")
+print(f"Recall       : {recall_score(y_test, y_pred):.4f}")  # 🔥 IMPORTANT
+print(f"F1 Score     : {f1_score(y_test, y_pred):.4f}")
+
+print("\n📋 Classification Report:")
 print(classification_report(y_test, y_pred))
-
 # Save
 joblib.dump(model_pipeline, "pipeline_model.pkl")
 
