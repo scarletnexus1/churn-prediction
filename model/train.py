@@ -1,5 +1,6 @@
 import pandas as pd
 import joblib
+import pickle
 from xgboost import XGBClassifier
 from sklearn.utils.class_weight import compute_class_weight
 from sklearn.model_selection import train_test_split
@@ -18,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
 sys.path.insert(0, ROOT_DIR)
 
-from pipeline import FeatureEngineer  # ← importing from ROOT now
+from pipeline import FeatureEngineer
 
 # Load data
 df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
@@ -26,11 +27,7 @@ df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 # Cleaning
 df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
 df.loc[df['tenure'] == 0, 'TotalCharges'] = 0
-
-# Drop ID
 df.drop('customerID', axis=1, inplace=True)
-
-# Target
 df['Churn'] = df['Churn'].map({'Yes':1, 'No':0})
 
 # Split
@@ -88,20 +85,17 @@ y_pred = model_pipeline.predict(X_test)
 y_prob = model_pipeline.predict_proba(X_test)[:, 1]
 
 # Metrics
-acc = accuracy_score(y_test, y_pred)
-roc = roc_auc_score(y_test, y_prob)
-
 print("\n Model Performance")
-print(f"Accuracy     : {acc:.4f}")
-print(f"ROC-AUC      : {roc:.4f}")
+print(f"Accuracy     : {accuracy_score(y_test, y_pred):.4f}")
+print(f"ROC-AUC      : {roc_auc_score(y_test, y_prob):.4f}")
 print(f"Precision    : {precision_score(y_test, y_pred):.4f}")
 print(f"Recall       : {recall_score(y_test, y_pred):.4f}")
 print(f"F1 Score     : {f1_score(y_test, y_pred):.4f}")
-
 print("\n📋 Classification Report:")
 print(classification_report(y_test, y_pred))
 
-# Save to model folder
-joblib.dump(model_pipeline, "model/pipeline_model.pkl")# ← saves to correct folder
+# ✅ Save with pickle at the very end
+with open("model/pipeline_model.pkl", "wb") as f:
+    pickle.dump(model_pipeline, f)
 
 print("✅ Model saved successfully!")
