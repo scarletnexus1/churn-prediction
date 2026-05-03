@@ -1,128 +1,156 @@
-🚀 Customer Churn Prediction Dashboard
+# 🚀 Customer Churn Prediction Dashboard
 
-An end-to-end Machine Learning project that predicts whether a telecom customer is likely to churn, along with actionable business insights and recommendations.
+An end-to-end **Machine Learning project** that predicts customer churn and provides **actionable business insights** through an interactive dashboard.
 
-📌 Project Overview
+---
 
-This project builds a customer churn prediction system using machine learning and deploys it as an interactive web application using Streamlit Cloud.
+## 📌 Project Overview
 
-The app allows users to input customer details and get:
+This project builds a churn prediction system using **Scikit-learn pipelines** and deploys it using **Streamlit Cloud**.
 
-✅ Churn prediction (Stay / Churn)
-📊 Churn probability score
-📈 Customer insights (CLV, pricing sensitivity)
-🔍 Key drivers influencing prediction
-💡 Business recommendations
-❗ Problem Statement
+The application allows users to:
 
-Customer churn is a major challenge in the telecom industry.
+* 🔍 Predict whether a customer will churn
+* 📊 View churn probability score
+* 📈 Analyze customer insights (CLV, price sensitivity)
+* 🧠 Understand key drivers behind predictions
+* 💡 Get business recommendations
 
-Acquiring a new customer costs 5x more than retaining an existing one.
+---
 
-👉 The goal of this project is to:
+## ❗ Problem Statement
 
-Predict whether a customer will churn
-Identify key factors influencing churn
-Provide actionable strategies to reduce churn
+Customer churn is a major issue in the telecom industry.
 
-🛠️ Tech Stack
-Python
-Pandas, NumPy → Data processing
-Scikit-learn → Model building (Pipeline, Preprocessing)
-Matplotlib, SHAP → Visualization & explainability
-Streamlit → Web app UI
-Joblib → Model serialization
-Git & GitHub → Version control
-Streamlit Cloud → Deployment
+* Acquiring a new customer costs **5× more** than retaining an existing one
+* Businesses need **data-driven strategies** to reduce churn
 
-🤖 Model Performance
-Metric	Value
-Accuracy	81%
-Precision (Churn)	0.64
-Recall (Churn)	0.57
-F1 Score	0.60
+**Goal:**
 
-📊 Interpretation:
-Model performs well overall with 81% accuracy
-Balanced performance between precision and recall
-Effectively identifies churn-prone customers
+* Predict churn probability
+* Identify key factors
+* Provide actionable insights
 
-📸 Application Screenshots
+---
 
-🖥️ Dashboard Interface
+## 🛠️ Tech Stack
+
+* **Python**
+* **Pandas, NumPy** → Data processing
+* **Scikit-learn** → Model & pipeline
+* **SHAP** → Explainability
+* **Streamlit** → UI
+* **Joblib** → Model saving
+* **Git & GitHub** → Version control
+* **Streamlit Cloud** → Deployment
+
+---
+
+## 🤖 Model Performance
+
+| Metric            | Value |
+| ----------------- | ----- |
+| Accuracy          | 81%   |
+| Precision (Churn) | 0.64  |
+| Recall (Churn)    | 0.57  |
+| F1 Score          | 0.60  |
+
+**Interpretation:**
+
+* Strong overall performance
+* Balanced precision-recall tradeoff
+* Effectively identifies churn-prone customers
+
+---
+
+## 📸 Application Screenshots
+
+### 🖥️ Dashboard
+
 ![Dashboard](assets/app1.png)
 
-📊 Prediction Output
-![Prediction](app2/dashboard.png)
+### 📊 Prediction Output
 
-📈 Insights & Recommendations
+![Prediction](assets/app2.png)
+
+### 📈 Insights & Recommendations
+
 ![Insights](assets/app3.png)
 
-🌐 Live Demo
+---
 
-👉 Try the app here:
-🔗 https://churn-prediction-scarlet.streamlit.app/
+## 🌐 Live Demo
 
-(Replace with your actual deployed link)
+👉 **Try the app:**
+https://churn-prediction-scarlet.streamlit.app/
 
-📊 Key Features
-🎯 Real-time churn prediction
-📉 Risk scoring system
-📊 Customer insights (CLV, pricing sensitivity)
-🔍 Explainable AI (feature drivers)
-💡 Smart recommendations
-🧠 Business Insights
-🔴 1. Short Tenure = High Risk
-Customers with low tenure (e.g., ~3 months) are more likely to churn
+---
 
-👉 Reason:
+## 📊 Key Features
 
-New users are still evaluating the service
-Low commitment level
-🟡 2. High Monthly Charges Increase Churn Risk
-Customers paying higher monthly charges are more price-sensitive
-🟢 3. Long-Term Customers Are Stable
-High TotalCharges → Long tenure → Low churn probability
-💡 Business Recommendations
-✅ 1. Promote Long-Term Contracts
-Customers with short tenure should be encouraged to switch to long-term plans
+* 🎯 Real-time churn prediction
+* 📉 Risk scoring system
+* 📊 Customer insights (CLV, pricing sensitivity)
+* 🔍 Explainable AI (feature importance)
+* 💡 Smart recommendations
 
-✔ Offer incentives like:
+---
 
-Discounted yearly plans
-Bundled services
-✅ 2. Offer Discounts to At-Risk Customers
-Provide targeted discounts to customers likely to churn
+## 🧠 Business Insights
 
-✔ Example:
+### 🔴 Short Tenure = High Risk
 
-“Switch to yearly plan and get 20% off”
-✅ 3. Improve Early Customer Experience
-Focus on onboarding for new customers (first 3–6 months)
+Customers with low tenure are more likely to churn.
 
-✔ Provide:
+### 🟡 High Monthly Charges Increase Risk
 
-Better support
-Tutorials / guidance
-Personalized engagement
-🧠 Key Learning
-The biggest challenge in ML deployment is not model building,
-but ensuring consistent data schema and environment compatibility.
-👨‍💻 Author
+High-paying customers are more price-sensitive.
 
-Nimit Arora
-🚀 Machine Learning Enthusiast
+### 🟢 Long-Term Customers Are Stable
 
-⭐ If you like this project
+Higher total charges → long-term retention → lower churn risk.
 
-Give it a ⭐ on GitHub and share your feedback!
+---
 
-🔥 If you want next upgrade
+## 💡 Business Recommendations
 
-I can help you:
+### ✅ Promote Long-Term Contracts
 
-Improve model (XGBoost / better recall)
-Add advanced SHAP visualizations
-Make UI premium (dashboard-level)
+Encourage users to switch to yearly plans with discounts.
 
-Just tell me 🚀
+### ✅ Target At-Risk Customers
+
+Offer personalized discounts and retention campaigns.
+
+### ✅ Improve Onboarding Experience
+
+Focus on first 3–6 months with better support and engagement.
+
+---
+
+## 🧠 Key Learning
+
+The biggest challenge in ML projects is not model building, but:
+
+* Maintaining consistent data schema
+* Handling deployment issues
+* Ensuring reproducibility
+
+---
+
+## 👨‍💻 Author
+
+**Nimit Arora**
+Machine Learning Enthusiast
+
+---
+
+## ⭐ Support
+
+If you found this useful:
+
+* ⭐ Star the repository
+* Share feedback
+* Connect for collaboration
+
+---
