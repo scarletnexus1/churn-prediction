@@ -10,17 +10,17 @@ from sklearn.impute import SimpleImputer
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import accuracy_score, roc_auc_score, classification_report
 import numpy as np
-
 import sys
 import os
 
 
-# Add app folder to path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-APP_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "app"))
-sys.path.insert(0, APP_DIR)
 
-from pipeline import FeatureEngineer
+# Add project root to path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
+sys.path.insert(0, ROOT_DIR)
+
+from app.pipeline import FeatureEngineer
 # Load data
 df = pd.read_csv("../data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
