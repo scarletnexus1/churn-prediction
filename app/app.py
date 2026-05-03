@@ -5,20 +5,15 @@ import shap
 import os
 import sys
 
-
+# Fix paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
-sys.path.insert(0, ROOT_DIR)
+sys.path.insert(0, ROOT_DIR)  # ← must be BEFORE joblib.load()
 
-from app.pipeline import FeatureEngineer
-
-# Fix import path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
+from pipeline import FeatureEngineer  # ← force import so pickle can find it
 
 model_path = os.path.join(BASE_DIR, "..", "model", "pipeline_model.pkl")
-
-model = joblib.load(model_path)
+model = joblib.load(model_path)  # ← now it can find pipeline.FeatureEngineer
 
 st.set_page_config(page_title="Churn Predictor", layout="wide")
 
