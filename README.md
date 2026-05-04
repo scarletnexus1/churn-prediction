@@ -53,13 +53,13 @@ Customer churn is a major issue in the telecom industry.
 | Metric            | Value |
 | ----------------- |-------|
 | Accuracy          | 75%   |
-| Precision (Churn) | 0.54  |
+| Precision (Churn) | 0.54  |"
 | Recall (Churn)    | 0.72  |
 | F1 Score          | 0.62  |
 
 **Interpretation:**
 
-* Model prioritizes **high recall (0.77)** to capture most churn-prone customers  
+* Model prioritizes **high recall (0.72)** to capture most churn-prone customers  
 * Slight trade-off in accuracy is acceptable for business use  
 * Better suited for **customer retention strategies**
 
