@@ -155,8 +155,8 @@ Focus on first 3–6 months with better support and engagement.
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/scarletnexus1/churn-prediction.git
+cd churn-prediction
 ```
 
 **2. Create a virtual environment**
