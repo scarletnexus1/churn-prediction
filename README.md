@@ -51,11 +51,11 @@ Customer churn is a major issue in the telecom industry.
 ## 🤖 Model Performance
 
 | Metric            | Value |
-| ----------------- | ----- |
-| Accuracy          | 81%   |
-| Precision (Churn) | 0.64  |
-| Recall (Churn)    | 0.57  |
-| F1 Score          | 0.60  |
+| ----------------- |-------|
+| Accuracy          | 75%   |
+| Precision (Churn) | 0.54  |
+| Recall (Churn)    | 0.72  |
+| F1 Score          | 0.62  |
 
 **Interpretation:**
 
