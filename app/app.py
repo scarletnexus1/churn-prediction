@@ -6,7 +6,7 @@ import os
 import sys
 import pickle
 
-# Fix paths
+# Fixed paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
 sys.path.insert(0, ROOT_DIR)
@@ -27,15 +27,10 @@ with open(model_path, 'rb') as f:
 
 st.set_page_config(page_title="Churn Predictor", layout="wide")
 
-# ----------------------------
-# TITLE
-# ----------------------------
+# Title
 st.markdown("<h1 style='text-align: center;'>📊 Customer Churn Prediction Dashboard</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
-# ----------------------------
-# INPUTS
-# ----------------------------
 st.subheader("📥 Enter Customer Details")
 
 tenure = st.slider("Tenure (months)", 0, 72, 12)
@@ -45,9 +40,7 @@ total = st.slider("Total Charges", 0, 10000, 1000)
 contract = st.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
 payment = st.selectbox("Payment Method", ["Electronic check", "Mailed check", "Bank transfer", "Credit card"])
 
-# ----------------------------
 # CREATE INPUT
-# ----------------------------
 input_data = {
     "tenure": tenure,
     "MonthlyCharges": monthly,
@@ -56,16 +49,13 @@ input_data = {
     "PaymentMethod": payment
 }
 
-# ----------------------------
 # PREDICT
-# ----------------------------
 if st.button("🚀 Predict Churn"):
 
-    # Create dataframe
-    # Get expected columns from trained pipeline
+
     expected_cols = list(model.named_steps['preprocessing'].feature_names_in_)
 
-    # Build a base input with what you know
+
     base_data = {
         'gender': 'Male',
         'SeniorCitizen': 0,
@@ -88,37 +78,35 @@ if st.button("🚀 Predict Churn"):
         'TotalCharges': float(total)
     }
 
-    # 🔥 Step 1: Create full dataframe with ALL expected columns
+    # creating df with expected cols
     input_df = pd.DataFrame(columns=expected_cols)
 
-    # 🔥 Step 2: Fill known values
+    # fill known value
     for col in base_data:
         if col in input_df.columns:
             input_df.loc[0, col] = base_data[col]
 
-    # 🔥 Step 3: Fill missing safely
+    # Fill missing safely
     for col in input_df.columns:
         if input_df[col].isnull().all():
             input_df.loc[0, col] = 'No' if input_df[col].dtype == 'object' else 0
 
-    # 🔥 Step 4: Fix numeric types
+    #  ALIGNING NUMERIC TYPES
     input_df['tenure'] = input_df['tenure'].astype(int)
     input_df['MonthlyCharges'] = input_df['MonthlyCharges'].astype(float)
     input_df['TotalCharges'] = input_df['TotalCharges'].astype(float)
 
-    # 🔥 Step 5: Ensure clean index
+    #  MAKING clean index
     input_df = input_df.reset_index(drop=True)
 
-    # Debug (you can remove later)
+    # Debugging step (you can remove later)
     st.write("INPUT:", input_df)
 
-    # Predict
+    # Prediction
     prediction = model.predict(input_df)[0]
     prob = model.predict_proba(input_df)[0][1]
 
-    # ----------------------------
     # RESULT
-    # ----------------------------
     st.subheader("🔍 Prediction Result")
 
     if prediction == 1:
@@ -126,9 +114,8 @@ if st.button("🚀 Predict Churn"):
     else:
         st.success(f"✅ Customer Likely to Stay ({1-prob:.2f})")
 
-    # ----------------------------
     # RISK SCORE
-    # ----------------------------
+
     st.subheader("🎯 Churn Risk Score")
 
     st.metric("Churn Probability", f"{prob*100:.1f}%")
@@ -141,9 +128,7 @@ if st.button("🚀 Predict Churn"):
     else:
         st.success("🟢 Low Risk Customer")
 
-    # ----------------------------
     # CUSTOMER INSIGHTS
-    # ----------------------------
     st.subheader("📊 Customer Insights")
 
     avg_charges = total / (tenure + 1)
@@ -155,9 +140,8 @@ if st.button("🚀 Predict Churn"):
     col2.metric("📈 CLV", f"{clv:.2f}")
     col3.metric("⚡ Price Sensitivity", f"{price_sensitivity:.2f}")
 
-    # ----------------------------
-    # WHY THIS PREDICTION
-    # ----------------------------
+    # REASON FOR THIS PREDICTION
+
     st.subheader("🧠 Why this prediction?")
 
     if prediction == 1:
@@ -165,9 +149,7 @@ if st.button("🚀 Predict Churn"):
     else:
         st.write("This customer shows stable behavior similar to users who stayed.")
 
-    # ----------------------------
     # SHAP EXPLANATION
-    # ----------------------------
     try:
         fe = model.named_steps['feature_engineering']
         X_fe = fe.transform(input_df)
@@ -206,9 +188,7 @@ if st.button("🚀 Predict Churn"):
     except Exception as e:
         st.error(f"SHAP Error: {e}")
 
-    # ----------------------------
     # RECOMMENDATIONS
-    # ----------------------------
     st.subheader("💡 Recommendations")
 
 
@@ -229,8 +209,6 @@ if st.button("🚀 Predict Churn"):
     for r in recommendations:
         st.markdown(f"👉 {r}")
 
-# ----------------------------
 # FOOTER
-# ----------------------------
 st.markdown("---")
 st.markdown("🚀 Built by NIMIT ARORA | ML Project")

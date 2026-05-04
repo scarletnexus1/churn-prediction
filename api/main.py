@@ -32,7 +32,7 @@ def predict(data: CustomerInput):
 
     data = data.dict()
 
-    # Default features
+# Default features
     data['gender'] = 'Male'
     data['SeniorCitizen'] = 0
     data['Partner'] = 'No'
