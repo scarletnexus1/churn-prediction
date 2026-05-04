@@ -149,6 +149,34 @@ Focus on first 3–6 months with better support and engagement.
 
 ---
 
+## 🖥️ Run Locally
+
+**Prerequisites:** Python 3.10+ and Git installed
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+```
+
+**2. Create a virtual environment**
+```bash
+python -m venv venv
+source venv/bin/activate        # On Windows: venv\Scripts\activate
+```
+
+**3. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**4. Run the app**
+```bash
+streamlit run app.py
+```
+
+**5. Open in browser**
+
 ## 🧠 Key Learning
 
 The biggest challenge in ML projects is not model building, but:
