@@ -162,7 +162,7 @@ if st.button("🚀 Predict Churn"):
 
         final_model = model.named_steps['model']
 
-        explainer = shap.LinearExplainer(final_model, X_processed_df)
+        explainer = shap.TreeExplainer(final_model)
         shap_values = explainer(X_processed_df)
 
         st.subheader("🔍 Key Drivers of Prediction")
