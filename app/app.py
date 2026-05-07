@@ -5,6 +5,7 @@ import shap
 import os
 import sys
 import pickle
+import numpy as np
 
 # Fixed paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -156,6 +157,9 @@ if st.button("🚀 Predict Churn"):
 
         preprocessor = model.named_steps['preprocessing']
         X_processed = preprocessor.transform(X_fe)
+
+        X_processed = X_processed.toarray() if hasattr(X_processed, 'toarray') else np.array(X_processed,
+                                                                                             dtype=np.float32)
 
         feature_names = preprocessor.get_feature_names_out()
         X_processed_df = pd.DataFrame(X_processed, columns=feature_names)
