@@ -7,6 +7,8 @@ import sys
 import pickle
 import numpy as np
 
+import traceback
+
 # Fixed paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
@@ -151,6 +153,7 @@ if st.button("🚀 Predict Churn"):
         st.write("This customer shows stable behavior similar to users who stayed.")
 
     # SHAP EXPLANATION
+    # SHAP EXPLANATION
     try:
         fe = model.named_steps['feature_engineering']
         X_fe = fe.transform(input_df)
@@ -159,21 +162,23 @@ if st.button("🚀 Predict Churn"):
         X_processed = preprocessor.transform(X_fe)
 
         X_processed = X_processed.toarray() if hasattr(X_processed, 'toarray') else np.array(X_processed,
-                                                                                             dtype=np.float32)
+                                                                                             dtype=np.float64)
 
-        feature_names = preprocessor.get_feature_names_out()
-        X_processed_df = pd.DataFrame(X_processed, columns=feature_names)
-
+        feature_names = list(preprocessor.get_feature_names_out())
         final_model = model.named_steps['model']
 
         explainer = shap.TreeExplainer(final_model)
-        shap_values = explainer(X_processed_df)
+        shap_values = explainer.shap_values(X_processed)
+
+        # Random Forest binary — shap_values is a list of 2 arrays
+        # Index [1] = churn class, [0] = first customer
+        sv = shap_values[0]
 
         st.subheader("🔍 Key Drivers of Prediction")
 
         shap_df = pd.DataFrame({
             "Feature": feature_names,
-            "Impact": shap_values.values[0]
+            "Impact": sv
         })
 
         shap_df["AbsImpact"] = shap_df["Impact"].abs()
@@ -183,14 +188,39 @@ if st.button("🚀 Predict Churn"):
             .str.replace("cat__", "") \
             .str.replace("num__", "")
 
-        for _, row in top_features.iterrows():
-            if row["Impact"] > 0:
-                st.write(f"🔺 {row['Feature']} increases churn risk")
-            else:
-                st.write(f"🔻 {row['Feature']} decreases churn risk")
 
+        for _, row in top_features.iterrows():
+
+            feature_name = row['Feature'] \
+                .replace("cat__", "") \
+                .replace("num__", "") \
+                .replace("_", " ")
+
+            feature_name = feature_name.title()
+            if row["Impact"] > 0:
+                st.markdown(
+                    f"""
+                    <div style='padding:0.7rem 1rem; margin:0.4rem 0; border-radius:8px;
+                    background:rgba(224,85,85,0.08); border-left:4px solid #E05555;'>
+                    🔺 <strong>{feature_name}</strong> increases churn risk
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+            else:
+                st.markdown(
+                    f"""
+                    <div style='padding:0.7rem 1rem; margin:0.4rem 0; border-radius:8px;
+                    background:rgba(76,175,130,0.08); border-left:4px solid #4CAF82;'>
+                    🔻 <strong>{feature_name}</strong> decreases churn risk
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
     except Exception as e:
         st.error(f"SHAP Error: {e}")
+        st.code(traceback.format_exc())
 
     # RECOMMENDATIONS
     st.subheader("💡 Recommendations")
